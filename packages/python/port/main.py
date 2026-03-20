@@ -12,7 +12,7 @@ class ScriptWrapper(Generator):
         self.script = script
         self.queue = deque()
 
-    def add_log_handler(self, logger_name="port.script"):
+    def add_log_handler(self, logger_name="port"):
         """Attach a handler to the named logger that forwards log records as CommandSystemLog commands."""
         logger = logging.getLogger(logger_name)
         logger.setLevel(logging.DEBUG)

@@ -3,6 +3,7 @@ import io
 import json
 import os
 import pytz
+import logging
 
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -23,6 +24,7 @@ WATCH_PREFIXES = [
     # "Viewed ", << prefix to be discussed
 ]
 
+logger = logging.getLogger(__name__)
 
 class ParseResult(Enum):
     FILES_NOT_FOUND = "files_not_found"
@@ -46,7 +48,7 @@ class YoutubeParser(ABC):
                     self._parse_file(file_name, file_content)
             self.parse_result = ParseResult.FILE_PARSED if self._has_data() else ParseResult.FILES_NOT_FOUND
         except (json.JSONDecodeError, ValueError, UnicodeDecodeError) as e:
-            print(f"Error parsing {self.__class__.__name__}: {e}")
+            logger.error(f"Error parsing {self.__class__.__name__}: {e}")
             self.parse_result = ParseResult.FILE_INCORRECT_FORMAT
         return self.parse_result
 
@@ -94,11 +96,11 @@ class YoutubeHistoryParser(YoutubeParser):
         return self.parse_result
 
     def _parse_file(self, file_name, file_content):
-        print(f"Parsing file: {file_name}")
+        logger.debug(f"Parsing file: {file_name}")
 
         json_data = json.loads(file_content.decode("utf-8", errors="ignore"))
 
-        print(f"File parsed: {len(json_data)} records")
+        logger.info(f"File parsed: {len(json_data)} records")
 
         if not isinstance(json_data, list) or not all(
             isinstance(item, dict) for item in json_data
@@ -145,7 +147,7 @@ class YoutubeSubscriptionsParser(YoutubeParser):
                 "channel_title": row_lower.get("channel title", ""),
                 "channel_url": row_lower.get("channel url", ""),
             })
-        print(f"Subscriptions parsed: {len(self.subscriptions)} records")
+        logger.info(f"Subscriptions parsed: {len(self.subscriptions)} records")
 
 
 class YoutubeUploadedVideosParser(YoutubeParser):
@@ -172,4 +174,4 @@ class YoutubeUploadedVideosParser(YoutubeParser):
                 "video_category": row.get("Video category", ""),
                 "privacy": row.get("Privacy", ""),
             })
-        print(f"Uploaded videos parsed: {len(self.videos)} records")
+        logger.info(f"Uploaded videos parsed: {len(self.videos)} records")
