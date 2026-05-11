@@ -113,6 +113,19 @@ test('can undo row removal before submission', async ({ page }) => {
   expect(submittedData).toEqual(expect.stringContaining("Some other title"));
 });
 
+test('shows HTML format error when history files are HTML', async ({ page }) => {
+  await page.goto('http://localhost:3000/');
+  await expect(page.getByRole('heading', { name: 'Youtube Data donation' })).toBeVisible({ timeout: 90000 });
+
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByText('Choose file').click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(path.join(__dirname, 'test_html.zip'));
+  await page.getByText('Continue').click();
+
+  await expect(page.getByText('Multiple formats')).toBeVisible({ timeout: 30000 });
+});
+
 test('can cancel submission', async ({ page }) => {
   await setupTestWithFileUpload(page);
 
