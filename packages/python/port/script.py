@@ -12,6 +12,11 @@ from port.parsers import ParseResult
 
 logger = logging.getLogger(__name__)
 
+
+class HtmlFormatError(Exception):
+    pass
+
+
 def process(session_id):
     key = "zip-youtube"
     page_renderer = PageRenderer()
@@ -37,6 +42,13 @@ def process(session_id):
             assert zip_ref, "Failed to open zip file"
             files = file_operations.get_files(zip_ref)
             assert files, "No files found in the zip archive"
+
+            html_history_files = [
+                f for f in files
+                if f.endswith("search-history.html") or f.endswith("watch-history.html")
+            ]
+            if html_history_files:
+                raise HtmlFormatError("History files are in HTML format, JSON format is required")
 
             relevant_files = [
                 f for f in files
@@ -69,6 +81,10 @@ def process(session_id):
             videos_parser.parse_files(extracted_files)
 
             break  # exit file submission loop on success file extraction
+
+        except HtmlFormatError as e:
+            logger.error("{}: HTML format detected ({})".format(key, str(e)))
+            yield page_renderer.html_format_retry_page()
 
         except AssertionError as e:
             logger.error("{}: extraction failed, retrying ({})".format(key, str(e)))

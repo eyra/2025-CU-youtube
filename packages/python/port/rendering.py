@@ -22,6 +22,42 @@ class PageRenderer:
         page = props.PropsUIPageDataSubmission("Zip", header, body)
         return CommandUIRender(page)
 
+    def html_format_retry_page(self):
+        text = props.Translatable(
+            {
+                "en": "Your YouTube data file contains history in HTML format, but JSON format is required. To fix this: go back to Google Takeout, select YouTube data, click 'Multiple formats', and change History from HTML to JSON. Then re-download and try again.",
+                "de": "Ihre YouTube-Datendatei enthält den Verlauf im HTML-Format, aber das JSON-Format ist erforderlich. Um dies zu beheben: Gehen Sie zu Google Takeout, wählen Sie YouTube-Daten aus, klicken Sie auf 'Mehrere Formate' und ändern Sie den Verlauf von HTML zu JSON. Laden Sie dann erneut herunter und versuchen Sie es noch einmal.",
+                "it": "Il file di dati YouTube contiene la cronologia in formato HTML, ma è richiesto il formato JSON. Per risolvere il problema: torna a Google Takeout, seleziona i dati YouTube, fai clic su 'Più formati' e cambia la cronologia da HTML a JSON. Quindi scarica nuovamente e riprova.",
+                "es": "Su archivo de datos de YouTube contiene el historial en formato HTML, pero se requiere el formato JSON. Para solucionar esto: vuelva a Google Takeout, seleccione los datos de YouTube, haga clic en 'Varios formatos' y cambie el historial de HTML a JSON. Luego vuelva a descargar e inténtelo de nuevo.",
+                "nl": "Uw YouTube-gegevensbestand bevat de geschiedenis in HTML-formaat, maar het JSON-formaat is vereist. Om dit op te lossen: ga terug naar Google Takeout, selecteer YouTube-gegevens, klik op 'Meerdere indelingen' en wijzig Geschiedenis van HTML naar JSON. Download vervolgens opnieuw en probeer het opnieuw.",
+                "ro": "Fișierul dvs. de date YouTube conține istoricul în format HTML, dar este necesar formatul JSON. Pentru a remedia acest lucru: reveniți la Google Takeout, selectați datele YouTube, faceți clic pe 'Mai multe formate' și schimbați Istoricul din HTML în JSON. Apoi descărcați din nou și încercați din nou.",
+                "lt": "Jūsų 'YouTube' duomenų faile istorija yra HTML formatu, tačiau reikalingas JSON formatas. Norėdami tai ištaisyti: grįžkite į 'Google' išklotinę, pasirinkite 'YouTube' duomenis, spustelėkite 'Keli formatai' ir pakeiskite istoriją iš HTML į JSON. Tada iš naujo atsisiųskite ir bandykite dar kartą.",
+            }
+        )
+        ok = props.Translatable(
+            {
+                "en": "Try again",
+                "de": "Erneut versuchen",
+                "it": "Riprova",
+                "es": "Inténtelo de nuevo",
+                "nl": "Probeer opnieuw",
+                "ro": "Încercați din nou",
+                "lt": "Bandyti dar kartą",
+            }
+        )
+        cancel = props.Translatable(
+            {
+                "en": "Continue",
+                "de": "Weiter",
+                "it": "Continua",
+                "es": "Continuar",
+                "nl": "Verder",
+                "ro": "Continuați",
+                "lt": "Tęsti",
+            }
+        )
+        return self.render_page([props.PropsUIPromptConfirm(text, ok, cancel)])
+
     def retry_confirmation_page(self, error_message=""):
         text = props.Translatable(
             {
