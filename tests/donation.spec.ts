@@ -102,6 +102,27 @@ test('can undo row removal before submission', async ({ page }) => {
   expect(submittedData).toEqual(expect.stringContaining("Device A"));
 });
 
+test('shows confirm prompt when uploading a bad zip and can retry', async ({ page }) => {
+  await page.goto('http://localhost:3000/');
+  await expect(page.getByRole('heading', { name: 'Data donation flow example' })).toBeVisible({ timeout: 90000 });
+
+  // Upload a non-zip file to trigger the BadZipFile error path
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByText('Choose file').click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles({ name: 'bad.zip', mimeType: 'application/zip', buffer: Buffer.from('not a zip') });
+
+  await page.getByText('Continue').click();
+
+  // The confirm prompt should appear with only the "Try again" button (no cancel)
+  await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
+  expect(await page.getByRole('button', { name: 'Cancel' }).count()).toBe(0);
+
+  // Clicking "Try again" should return to the file upload step
+  await page.getByRole('button', { name: 'Try again' }).click();
+  await expect(page.getByText('Choose file')).toBeVisible();
+});
+
 test('can cancel submission', async ({ page }) => {
   await setupTestWithFileUpload(page);
 
