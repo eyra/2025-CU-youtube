@@ -105,12 +105,14 @@ def process(session_id):
         if rtype == "PayloadJSON":
             logger.debug(f"{key}: donate consent data")
             data = json.loads(result.value)
-            yield donate(session_id, key, json.dumps(data))
+            yield donate(session_id, key, data)
+            return
 
         elif rtype == "PayloadFalse":
             yield donate(
-                session_id, key, json.dumps({"status": "data_submission declined"})
+                session_id, key, {"status": "data_submission declined"}
             )
+            return
 
         yield exit(1, "received unexpected consent form result")
 
