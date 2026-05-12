@@ -20,9 +20,10 @@ export interface PropsUIPromptConfirm {
   __type__: 'PropsUIPromptConfirm'
   text: Text
   ok: Text
+  cancel: Text
 }
 export function isPropsUIPromptConfirm (arg: any): arg is PropsUIPromptConfirm {
-  return isInstanceOf<PropsUIPromptConfirm>(arg, 'PropsUIPromptConfirm', ['text', 'ok'])
+  return isInstanceOf<PropsUIPromptConfirm>(arg, 'PropsUIPromptConfirm', ['text', 'ok', 'cancel'])
 }
 
 export interface PropsUIPromptFileInput {
