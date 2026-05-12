@@ -128,7 +128,7 @@ test('shows HTML format error when history files are HTML', async ({ page }) => 
 
 test('shows confirm prompt when uploading a bad zip and can retry', async ({ page }) => {
   await page.goto('http://localhost:3000/');
-  await expect(page.getByRole('heading', { name: 'Data donation flow example' })).toBeVisible({ timeout: 90000 });
+  await expect(page.getByRole('heading', { name: 'Youtube Data donation' })).toBeVisible({ timeout: 90000 });
 
   // Upload a non-zip file to trigger the BadZipFile error path
   const fileChooserPromise = page.waitForEvent('filechooser');

@@ -45,18 +45,7 @@ class PageRenderer:
                 "lt": "Bandyti dar kartą",
             }
         )
-        cancel = props.Translatable(
-            {
-                "en": "Continue",
-                "de": "Weiter",
-                "it": "Continua",
-                "es": "Continuar",
-                "nl": "Verder",
-                "ro": "Continuați",
-                "lt": "Tęsti",
-            }
-        )
-        return self.render_page([props.PropsUIPromptConfirm(text, ok, cancel)])
+        return self.render_page([props.PropsUIPromptConfirm(text, ok)])
 
     def retry_confirmation_page(self, error_message=""):
         text = props.Translatable(
